@@ -18,10 +18,15 @@ public class CustomerNPC : MonoBehaviour
     public bool IDMatch;
     public int[] HoldingItems;
     public List<bool> allreadyTaken = new List<bool>();
+    [Space(15)]
+
     public bool ValidStation;
 
-    public List<int> ShoppingList = new List<int>();
+    [HideInInspector] public List<int> ShoppingList = new List<int>();
+    [Space(15)]
+
     public List<int> ShoppingListAmount = new List<int>();
+    [Space(15)]
 
     public int Money;
     [SerializeField] private float thinkTime;
@@ -132,7 +137,7 @@ public class CustomerNPC : MonoBehaviour
             }
         }
 
-        for (int x = 0; x < ShoppingList.Count +1; x++)
+        for (int x = 0; x < ShoppingList.Count; x++)
         {
             ShoppingListAmount.Add(0);
             allreadyTaken.Add(false);
