@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.AI;
 
 public class WorkerAI : MonoBehaviour
 {
@@ -40,6 +41,10 @@ public class WorkerAI : MonoBehaviour
     [SerializeField] int LoadingID;
     int i = 0;
 
+    [Header("AI")]
+    public NavMeshAgent agent;
+    Rigidbody rb;
+
     public string workingStatus;
 
     float stocklimtFloat;
@@ -50,6 +55,9 @@ public class WorkerAI : MonoBehaviour
         loadTime = WorkerStats.loadTime;
         Skill = WorkerStats.Skill;
         StockLimt = WorkerStats.StockLimt;
+        agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody>();
+        agent.speed = moveSpeed;
         canMove = true;
         StartCoroutine(UpdateEachSecond());
         StartCoroutine(UpdateEachFiveSeconds());
@@ -111,7 +119,7 @@ public class WorkerAI : MonoBehaviour
 
 
 
-        if (dstSelectedStation == 0 || dstSelectedStation < 0.1f)
+        if (dstSelectedStation == 0 || dstSelectedStation < 0.15f)
         {
             RestockStation();
             Debug.Log("Can restock!");
@@ -153,8 +161,11 @@ public class WorkerAI : MonoBehaviour
         {
             if (HasStock)
             {
+                /*
                 Transform targetTransform = selectedStation.transform;
                 transform.position = Vector3.MoveTowards(transform.position, targetTransform.transform.position, Time.deltaTime * moveSpeed);
+                */
+                agent.SetDestination(selectedStation.transform.position);
              
                 Debug.DrawLine(this.transform.position, selectedStation.transform.position, Color.green);
             }
@@ -213,10 +224,17 @@ public class WorkerAI : MonoBehaviour
 
     public void MoveToStorageCrate()
     {
+        if (canMove)
+        {
+            /*
         Transform crateTransform = selectedCrate.transform;
         transform.position = Vector3.MoveTowards(transform.position, crateTransform.transform.position, Time.deltaTime * moveSpeed);
+        */
+            agent.SetDestination(selectedCrate.transform.position);
 
-        Debug.DrawLine(this.transform.position, selectedCrate.transform.position, Color.red);
+
+            Debug.DrawLine(this.transform.position, selectedCrate.transform.position, Color.red);
+        }
 
     }
 
@@ -246,6 +264,9 @@ public class WorkerAI : MonoBehaviour
 
     IEnumerator StartRestock()
     {
+        yield return new WaitForSeconds(1);
+        canMove = false;
+
         yield return new WaitForSeconds(loadTime);
         isPerformingActions = true;
 
@@ -265,6 +286,7 @@ public class WorkerAI : MonoBehaviour
 
         yield return new WaitForSeconds(3);
         isPerformingActions = false;
+        canMove = true;
         tick = 0;
         
     }
