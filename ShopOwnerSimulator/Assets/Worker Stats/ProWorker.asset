@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: ProWorker
   m_EditorClassIdentifier: 
   moveSpeed: 10
-  loadTime: 0.5
+  loadTime: 0.15
   Skill: 10
   StockLimt: 200

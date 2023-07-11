@@ -29,7 +29,7 @@ public class AICollisionHandler : MonoBehaviour
 
     private IEnumerator EnableCollision()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(5f);
         CollidingIsPosible = true;
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.AI;
 
 public class CustomerNPC : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class CustomerNPC : MonoBehaviour
     [SerializeField] Station SelectedStation;
     [SerializeField] Register[] registers;
     [SerializeField] Register selectedRegister;
+    NavMeshAgent agent;
 
 
     [Header("Information")]
@@ -43,6 +45,9 @@ public class CustomerNPC : MonoBehaviour
     {
         HiddenStations = FindObjectsOfType<Station>();
         registers = FindObjectsOfType<Register>();
+        agent = GetComponent<NavMeshAgent>();
+
+        agent.speed = Random.Range(1f, 4f);
 
         for(int i = 0; i < HiddenStations.Length; i++)
         {
@@ -72,7 +77,7 @@ public class CustomerNPC : MonoBehaviour
 
         dstSelectedStation = Vector3.Distance(SelectedStation.gameObject.transform.position, transform.position);
 
-        if (dstSelectedStation == 0 && !Refilling)
+        if (dstSelectedStation < 0.25f && !Refilling)
         {
             StartCoroutine(TakeFromshelf(thinkTime));
             Refilling = true;
@@ -189,15 +194,14 @@ public class CustomerNPC : MonoBehaviour
 
     public void MoveToStation()
     {
-        Transform targetTransform = SelectedStation.transform;
-        transform.position = Vector3.MoveTowards(transform.position, targetTransform.transform.position, Time.deltaTime * 4);
+        agent.SetDestination(SelectedStation.transform.position);
 
         Debug.DrawLine(this.transform.position, SelectedStation.transform.position, Color.green);
     }
     public void MoveToRegister()
     {
-        Transform targetTransform = selectedRegister.transform;
-        transform.position = Vector3.MoveTowards(transform.position, targetTransform.transform.position, Time.deltaTime * 4);
+        agent.SetDestination(selectedRegister.transform.position);
+
 
         Debug.DrawLine(this.transform.position, selectedRegister.transform.position, Color.grey);
     }

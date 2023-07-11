@@ -211,9 +211,7 @@ public class WorkerAI : MonoBehaviour
         {
             yield return new WaitForSeconds(loadTime);
             HoldingStock--;
-            selectedStation.usedRacks++;
-            selectedStation.UpdateStock();
-            
+            selectedStation.usedRacks++;            
             StartCoroutine(StockStation());
         }
 

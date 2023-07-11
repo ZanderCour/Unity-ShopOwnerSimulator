@@ -12,6 +12,7 @@ public class NameGenerator : MonoBehaviour
     public List<string> LastNames = new List<string>();
 
     public TextMeshProUGUI Text;
+    public bool Worker;
     public string name;
     bool boy;
     bool girl;
@@ -47,6 +48,7 @@ public class NameGenerator : MonoBehaviour
             name = GirlNames[Firstname] + " " + LastNames[Lastname];
         }
 
-        Text.text = name;
+        if(Worker)
+            Text.text = name;
     }
 }

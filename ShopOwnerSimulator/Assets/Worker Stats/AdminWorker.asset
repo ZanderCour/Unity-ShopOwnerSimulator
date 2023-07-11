@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf67ce41f2f34492082d2241d332a974, type: 3}
   m_Name: AdminWorker
   m_EditorClassIdentifier: 
-  moveSpeed: 2
-  loadTime: 5
-  Skill: 10
-  StockLimt: 200
+  moveSpeed: 8
+  loadTime: 0.1
+  Skill: 9999
+  StockLimt: 2000
