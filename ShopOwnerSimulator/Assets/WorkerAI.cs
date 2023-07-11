@@ -119,7 +119,7 @@ public class WorkerAI : MonoBehaviour
 
 
 
-        if (dstSelectedStation == 0 || dstSelectedStation < 0.15f)
+        if (dstSelectedStation == 0 || dstSelectedStation < 0.25f)
         {
             RestockStation();
             Debug.Log("Can restock!");

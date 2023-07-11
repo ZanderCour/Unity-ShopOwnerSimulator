@@ -24,6 +24,9 @@ public class Station : MonoBehaviour
     [Header("Price")]
     public int HoldingPrice;
 
+    [Header("Stock")]
+    public GameObject[] Chips;
+
     public void Start()
     {
         racks = stationClass.racks;
@@ -52,6 +55,11 @@ public class Station : MonoBehaviour
         if(usedRacks > racks)
         {
             usedRacks = racks;
+        }
+
+        for(int i = 0; i < usedRacks; i++)
+        {
+            Chips[i].SetActive(true);
         }
     }
 }
