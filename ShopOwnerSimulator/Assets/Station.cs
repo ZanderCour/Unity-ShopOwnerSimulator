@@ -57,7 +57,11 @@ public class Station : MonoBehaviour
             usedRacks = racks;
         }
 
-        for(int i = 0; i < usedRacks; i++)
+    }
+
+    public void UpdateStock()
+    {
+        for (int i = 0; i < usedRacks; i++)
         {
             Chips[i].SetActive(true);
         }
