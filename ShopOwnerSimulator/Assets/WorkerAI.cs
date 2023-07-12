@@ -49,6 +49,10 @@ public class WorkerAI : MonoBehaviour
 
     float stocklimtFloat;
 
+    [Header("Visual")]
+    public GameObject[] HoldingBoxes;
+    public int firstCrate, secondCrate, thirdCrate, finalCrate;
+
     private void Start()
     {
         moveSpeed = WorkerStats.moveSpeed;
@@ -133,6 +137,8 @@ public class WorkerAI : MonoBehaviour
         {
             MatchingStation = false;
         }
+
+        ShowHoldingItems();
     }
 
     public void FindNewStation()
@@ -216,6 +222,7 @@ public class WorkerAI : MonoBehaviour
         }
 
         if (!selectedStation.needsRestock || HoldingStock <= 0) {
+            selectedStation.takenByWorkerName = "";
             StopCoroutine(StockStation());
         }
 
@@ -311,7 +318,6 @@ public class WorkerAI : MonoBehaviour
         Debug.Log("Ticked 1");
         allTasksComplete = AreAllStationsFull();
 
-
         StartCoroutine(UpdateEachSecond());
     }
 
@@ -340,6 +346,58 @@ public class WorkerAI : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void ShowHoldingItems()
+    {
+        if (HoldingStock >= firstCrate)
+        {
+            HoldingBoxes[0].SetActive(true);
+        }
+
+
+
+        if (HoldingStock >= secondCrate)
+        {
+            HoldingBoxes[1].SetActive(true);
+        }
+        else if(HoldingStock < secondCrate)
+        {
+            HoldingBoxes[1].SetActive(false);
+        }
+
+
+
+        if (HoldingStock >= thirdCrate)
+        {
+            HoldingBoxes[2].SetActive(true);
+        }
+        else if(HoldingStock < thirdCrate)
+        {
+            HoldingBoxes[2].SetActive(false);
+        }
+
+
+
+        if (HoldingStock >= finalCrate)
+        {
+            HoldingBoxes[3].SetActive(true);
+        }
+        else if (HoldingStock < finalCrate)
+        {
+            HoldingBoxes[3].SetActive(false);
+        }
+
+
+
+
+        if (HoldingStock == 0)
+        {
+            HoldingBoxes[0].SetActive(false);
+            HoldingBoxes[1].SetActive(false);
+            HoldingBoxes[2].SetActive(false);
+            HoldingBoxes[3].SetActive(false);
+        }
     }
 
 }

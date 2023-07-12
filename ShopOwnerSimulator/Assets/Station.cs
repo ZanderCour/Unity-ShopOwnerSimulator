@@ -14,8 +14,12 @@ public class Station : MonoBehaviour
     public bool needsRestock;
     [SerializeField] private string ClassName;
     public StationClass stationClass;
+
     public string takenByWorkerName;
+    public string takenByCustomerName;
+
     public bool isTaken;
+    public bool IsTakenByCustomer;
 
 
     [Header("Id")]
@@ -41,6 +45,11 @@ public class Station : MonoBehaviour
             isTaken = true;
         }
 
+        if (takenByCustomerName != "")
+        {
+            IsTakenByCustomer = true;
+        }
+
         emptyRacks = racks - usedRacks;
         desiredStock = racks;
         if(usedRacks < desiredStock) { needsRestock = true; }
@@ -50,6 +59,12 @@ public class Station : MonoBehaviour
         {
             takenByWorkerName = "";
             isTaken = false;
+        }
+
+        if(usedRacks == 0)
+        {
+            takenByCustomerName = "";
+            IsTakenByCustomer = false;
         }
 
         if(usedRacks > racks)

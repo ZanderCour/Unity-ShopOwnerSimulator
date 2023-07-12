@@ -161,6 +161,7 @@ MonoBehaviour:
   - Betty
   - Nancy
   - Sandra
+  - Jeniffer
   LastNames:
   - Smith
   - Jackson
@@ -334,6 +335,7 @@ MonoBehaviour:
   Done: 0
   Refilling: 0
   dstSelectedStation: 0
+  HoldingBoxes: []
 --- !u!195 &8648247982948696880
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -22,14 +22,6 @@ public class NameGenerator : MonoBehaviour
         GenerateName();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            GenerateName();
-        }
-    }
-
     public void GenerateName()
     {
         int Genderindex = Random.Range(1, 3);
