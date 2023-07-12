@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96e8332f9c7844dd8b0ba1f5f556fac, type: 3}
   m_Name: Shelf 1
   m_EditorClassIdentifier: 
-  racks: 6
+  racks: 18
   ClassName: shelf
   acceptedID: 1

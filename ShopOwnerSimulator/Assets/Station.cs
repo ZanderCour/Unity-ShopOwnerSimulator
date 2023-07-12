@@ -31,7 +31,7 @@ public class Station : MonoBehaviour
     [Header("Stock")]
     public GameObject[] Chips;
 
-    public void Start()
+    public void OnEnable()
     {
         racks = stationClass.racks;
         ClassName = stationClass.ClassName;

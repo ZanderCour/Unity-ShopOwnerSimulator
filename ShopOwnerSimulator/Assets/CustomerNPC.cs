@@ -57,6 +57,7 @@ public class CustomerNPC : MonoBehaviour
 
         FetchShoppingList();
         SelectNextStation();
+
         SelectedStation.takenByCustomerName = "";
 
         Money = Random.Range(5, 101);
@@ -66,13 +67,11 @@ public class CustomerNPC : MonoBehaviour
     public void Update()
     {
         Done = ShoppingListDone();
-        Check();
-
 
         if (!Done)
         {
             if (SelectedStation == null || SelectedStation.usedRacks == 0 || SelectedStation.isTaken || !IDMatch || !ValidStation || !TakenStation) { SelectNextStation(); }
-            else if (SelectedStation.usedRacks > 0 && TakenStation) { MoveToStation(); }
+            else if (SelectedStation.usedRacks > 0) { MoveToStation(); }
         }
         else
         { 
@@ -98,7 +97,7 @@ public class CustomerNPC : MonoBehaviour
             StartCoroutine(TakeFromshelf(thinkTime));
             Refilling = true;
         }
-        else if(dstSelectedStation > 0)
+        else if(dstSelectedStation > 0.35f)
         {
             StopCoroutine(TakeFromshelf(0.1f));
         }
@@ -127,6 +126,10 @@ public class CustomerNPC : MonoBehaviour
         {
             ValidStation = true;
         }
+
+        if (SelectedStation != null) {
+            Check();
+        }
     }
 
 
@@ -138,7 +141,6 @@ public class CustomerNPC : MonoBehaviour
             {
                 IDMatch = ShoppingList.Contains(SelectedStation.acceptedID);
                 SelectedStation.takenByCustomerName = "";
-                SelectedStation.IsTakenByCustomer = false;
             }
 
             index = Random.Range(0, stations.Count);
@@ -162,13 +164,10 @@ public class CustomerNPC : MonoBehaviour
             {
                 ChecktedIDS.Add(stations[i].acceptedID);
                 ShoppingList.Add(stations[i].acceptedID);
-            }
-        }
 
-        for (int x = 0; x < ShoppingList.Count; x++)
-        {
-            ShoppingListAmount.Add(0);
-            allreadyTaken.Add(false);
+                ShoppingListAmount.Add(0);
+                allreadyTaken.Add(false);
+            }
         }
     }
 
@@ -208,12 +207,10 @@ public class CustomerNPC : MonoBehaviour
         SelectedStation.usedRacks -= AmountToTake;
         yield return new WaitForSeconds(3);
         if (dstSelectedStation == 0) { SelectNextStation(); }
-        if (dstSelectedStation == 0) { SelectNextStation(); }
         yield return new WaitForSeconds(1);
-        if (dstSelectedStation == 0) { SelectNextStation(); }
-        SelectedStation.takenByCustomerName = "";
         SelectedStation.IsTakenByCustomer = false;
         yield return new WaitForSeconds(thinkingtime);
+        SelectedStation.takenByCustomerName = "";
         Refilling = false;
     }
 
@@ -244,13 +241,13 @@ public class CustomerNPC : MonoBehaviour
         return true;
     }
 
-    public void Check()
+    private void Check()
     {
         for(int x = 0; x < stations.Count; x++)
         {
             Station station = stations[x];
-            int AcID = station.acceptedID;
-            if(allreadyTaken[AcID] == true)
+
+            if(allreadyTaken[station.acceptedID])
             {
                 stations.Remove(station);
             }
