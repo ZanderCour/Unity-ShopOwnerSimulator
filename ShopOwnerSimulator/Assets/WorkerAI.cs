@@ -76,7 +76,7 @@ public class WorkerAI : MonoBehaviour
         Crates = FindObjectsOfType<StorageSystem>();
         StationsAmount = stations.Length;
 
-        if (!allTasksComplete || !selectedCrate.HasStock)
+        if (!allTasksComplete || !selectedCrate.HasStock && selectedCrate != null)
         {
             if (selectedStation == null || selectedStation.emptyRacks == 0 || !MatchingStation || selectedStation.IsTakenByCustomer) { FindNewStation(); }
         }
@@ -147,11 +147,11 @@ public class WorkerAI : MonoBehaviour
         if(selectedCrate == null || !selectedCrate.HasStock)
         {
             Crateindex = Random.Range(0, Crates.Length);
-            selectedCrate = Crates[Crateindex];
+            if (selectedCrate != null) selectedCrate = Crates[Crateindex];
         }
 
         index = Random.Range(0, stations.Length);
-        selectedStation = stations[index];
+        if (selectedStation != null) selectedStation = stations[index];
 
         // Name matching
         if (!selectedStation.isTaken && !selectedStation.IsTakenByCustomer) {
@@ -203,8 +203,6 @@ public class WorkerAI : MonoBehaviour
                 restocking = true;
                 Debug.Log("Restocking :)");
                 workingStatus = "Restocking station";
-
-
             }
         }
         else

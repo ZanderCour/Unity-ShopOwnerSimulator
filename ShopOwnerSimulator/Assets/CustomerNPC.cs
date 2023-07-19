@@ -71,7 +71,7 @@ public class CustomerNPC : MonoBehaviour
             if (SelectedStation == null || SelectedStation.usedRacks == 0 || SelectedStation.isTaken || !IDMatch || !MatchingStationName) { SelectNextStation(); }
             else if (SelectedStation.usedRacks > 0 && MatchingStationName && !SelectedStation.isTaken) { MoveToStation(); }
         }
-        else
+        else if(SelectedStation != null)
         { 
             MoveToRegister();
         }
