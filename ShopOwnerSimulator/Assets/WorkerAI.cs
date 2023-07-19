@@ -78,7 +78,7 @@ public class WorkerAI : MonoBehaviour
 
         if (!allTasksComplete || !selectedCrate.HasStock)
         {
-            if (selectedStation == null || selectedStation.emptyRacks == 0 || !MatchingStation) { FindNewStation(); }
+            if (selectedStation == null || selectedStation.emptyRacks == 0 || !MatchingStation || selectedStation.IsTakenByCustomer) { FindNewStation(); }
         }
 
         if (!HasStock || allTasksComplete)
@@ -93,7 +93,7 @@ public class WorkerAI : MonoBehaviour
         }
         else if(HasStock && !allTasksComplete)
         {
-            if (selectedStation.needsRestock && HasStock && MatchingStation)
+            if (selectedStation.needsRestock && HasStock && MatchingStation && !selectedStation.IsTakenByCustomer)
             {
                 MoveToStation();
                 workingStatus = "Moving to selected station";
@@ -144,14 +144,17 @@ public class WorkerAI : MonoBehaviour
     public void FindNewStation()
     {
 
-        Crateindex = Random.Range(0, Crates.Length);
-        selectedCrate = Crates[Crateindex];
+        if(selectedCrate == null || !selectedCrate.HasStock)
+        {
+            Crateindex = Random.Range(0, Crates.Length);
+            selectedCrate = Crates[Crateindex];
+        }
 
         index = Random.Range(0, stations.Length);
         selectedStation = stations[index];
 
         // Name matching
-        if (!selectedStation.isTaken) {
+        if (!selectedStation.isTaken && !selectedStation.IsTakenByCustomer) {
             selectedStation.takenByWorkerName = gameObject.name;
         }
 

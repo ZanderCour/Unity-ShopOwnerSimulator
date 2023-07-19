@@ -20,10 +20,8 @@ public class CustomerNPC : MonoBehaviour
     public bool IDMatch;
     public int[] HoldingItems;
     public List<bool> allreadyTaken = new List<bool>();
-    public bool TakenStation;
+    public bool MatchingStationName;
     [Space(15)]
-
-    public bool ValidStation;
 
     [HideInInspector] public List<int> ShoppingList = new List<int>();
     [Space(15)]
@@ -55,7 +53,7 @@ public class CustomerNPC : MonoBehaviour
             stations.Add(HiddenStations[i]);
         }
 
-        FetchShoppingList();
+        FetchShoppingList();           
         SelectNextStation();
 
         SelectedStation.takenByCustomerName = "";
@@ -70,8 +68,8 @@ public class CustomerNPC : MonoBehaviour
 
         if (!Done)
         {
-            if (SelectedStation == null || SelectedStation.usedRacks == 0 || SelectedStation.isTaken || !IDMatch || !ValidStation || !TakenStation) { SelectNextStation(); }
-            else if (SelectedStation.usedRacks > 0) { MoveToStation(); }
+            if (SelectedStation == null || SelectedStation.usedRacks == 0 || SelectedStation.isTaken || !IDMatch || !MatchingStationName) { SelectNextStation(); }
+            else if (SelectedStation.usedRacks > 0 && MatchingStationName && !SelectedStation.isTaken) { MoveToStation(); }
         }
         else
         { 
@@ -79,18 +77,6 @@ public class CustomerNPC : MonoBehaviour
         }
 
         dstSelectedStation = Vector3.Distance(SelectedStation.gameObject.transform.position, transform.position);
-
-        if (!Done)
-        {
-            if (SelectedStation.takenByCustomerName == this.gameObject.name)
-            {
-                TakenStation = true;
-            }
-            else
-            {
-                TakenStation = false;
-            }
-        }
 
         if (dstSelectedStation < 0.25f && !Refilling)
         {
@@ -118,17 +104,9 @@ public class CustomerNPC : MonoBehaviour
 
         }
 
-        if (allreadyTaken[SelectedStation.acceptedID])
-        {
-            ValidStation = false;
-        }
-        else
-        {
-            ValidStation = true;
-        }
-
         if (SelectedStation != null) {
             Check();
+            IDMatch = ShoppingList.Contains(SelectedStation.acceptedID);
         }
     }
 
@@ -137,22 +115,27 @@ public class CustomerNPC : MonoBehaviour
     {
         if (!Done)
         {
-            if(SelectedStation != null)
-            {
-                IDMatch = ShoppingList.Contains(SelectedStation.acceptedID);
-                SelectedStation.takenByCustomerName = "";
-            }
-
             index = Random.Range(0, stations.Count);
             SelectedStation = stations[index];
 
-            registerIndex = Random.Range(0, registers.Length);
-            selectedRegister = registers[registerIndex];
-
             // Name matching
-            if (!SelectedStation.IsTakenByCustomer) {
+            if (!SelectedStation.IsTakenByCustomer && !SelectedStation.isTaken) {
                 SelectedStation.takenByCustomerName = gameObject.name;
             }
+
+            // Name matching
+            if (SelectedStation.takenByCustomerName == this.gameObject.name)
+            {
+                MatchingStationName = true;
+            }
+            else
+            {
+                MatchingStationName = false;
+            }
+
+            //Register
+            registerIndex = Random.Range(0, registers.Length);
+            selectedRegister = registers[registerIndex];
         }
     }
 
@@ -193,7 +176,7 @@ public class CustomerNPC : MonoBehaviour
 
     private IEnumerator TakeFromshelf(float thinkingtime)
     {
-        if (Done || !ValidStation)
+        if (Done)
         {
             Refilling = false;
             yield break;
@@ -206,11 +189,9 @@ public class CustomerNPC : MonoBehaviour
         HoldingItems[SelectedStation.acceptedID] += AmountToTake;
         SelectedStation.usedRacks -= AmountToTake;
         yield return new WaitForSeconds(3);
-        if (dstSelectedStation == 0) { SelectNextStation(); }
-        yield return new WaitForSeconds(1);
-        SelectedStation.IsTakenByCustomer = false;
-        yield return new WaitForSeconds(thinkingtime);
         SelectedStation.takenByCustomerName = "";
+        SelectNextStation();
+        yield return new WaitForSeconds(thinkingtime);
         Refilling = false;
     }
 
@@ -218,14 +199,15 @@ public class CustomerNPC : MonoBehaviour
     {
         agent.SetDestination(SelectedStation.transform.position);
 
-        Debug.DrawLine(this.transform.position, SelectedStation.transform.position, Color.green);
+        Debug.DrawLine(this.transform.position, SelectedStation.transform.position, Color.blue);
     }
     public void MoveToRegister()
     {
         agent.SetDestination(selectedRegister.transform.position);
-
-
-        Debug.DrawLine(this.transform.position, selectedRegister.transform.position, Color.grey);
+        if(SelectedStation != null) {
+            SelectedStation.takenByCustomerName = "";
+        }
+        Debug.DrawLine(this.transform.position, selectedRegister.transform.position, Color.white);
     }
 
     private bool ShoppingListDone()
@@ -250,6 +232,14 @@ public class CustomerNPC : MonoBehaviour
             if(allreadyTaken[station.acceptedID])
             {
                 stations.Remove(station);
+            }
+        }
+
+        if(stations.Count == 0 && !Done)
+        {
+            for (int i = 0; i < HiddenStations.Length; i++)
+            {
+                stations.Add(HiddenStations[i]);
             }
         }
 

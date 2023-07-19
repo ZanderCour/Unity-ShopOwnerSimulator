@@ -40,20 +40,17 @@ public class Station : MonoBehaviour
 
     private void Update()
     {
-        if(takenByWorkerName != "")
-        {
-            isTaken = true;
-        }
-
-        if (takenByCustomerName != "")
-        {
-            IsTakenByCustomer = true;
-        }
 
         emptyRacks = racks - usedRacks;
         desiredStock = racks;
         if(usedRacks < desiredStock) { needsRestock = true; }
         else { needsRestock = false; }
+
+        if(isTaken && IsTakenByCustomer)
+        {
+            takenByWorkerName = "";
+            takenByCustomerName = "";
+        }
 
         if (!needsRestock)
         {
@@ -67,7 +64,25 @@ public class Station : MonoBehaviour
             IsTakenByCustomer = false;
         }
 
-        if(usedRacks > racks)
+        if (takenByWorkerName != "")
+        {
+            isTaken = true;
+        }
+        else
+        {
+            isTaken = false;
+        }
+
+        if (takenByCustomerName != "")
+        {
+            IsTakenByCustomer = true;
+        }
+        else
+        {
+            IsTakenByCustomer = false;
+        }
+
+        if (usedRacks > racks)
         {
             usedRacks = racks;
         }
